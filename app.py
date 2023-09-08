@@ -45,6 +45,9 @@ def add_user():
     last_name = request.form["last_name"]
     image_url = request.form["image_url"]
 
+    if len(image_url) == 0:
+        image_url = None  # if image_url is empty, then make it NULL
+
     new_user = User(first_name=first_name, last_name=last_name, image_url=image_url)
     db.session.add(new_user)
     db.session.commit()
@@ -52,8 +55,28 @@ def add_user():
     return redirect("/users")
 
 
-@app.route("/<int:user_id>")
+@app.route("/users/<int:user_id>")
 def show_user(user_id):
-    """Show details about a user"""
+    """Show information about the given user."""
     user = User.query.get_or_404(user_id)
     return render_template("details.html", user=user)
+
+
+@app.route("/users/<int:user_id>/edit")
+def edit_user(user_id):
+    """Show the edit page for a user."""
+    user = User.query.get_or_404(user_id)
+    return render_template("edit.html", user=user)
+
+
+@app.route("/users/<int:user_id>/edit", methods=["POST"])
+def post_edit(user_id):
+    """Process the edit form"""
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
+    image_url = request.form["image_url"]
+
+    if len(image_url) == 0:
+        image_url = None
+
+    return redirect("/users")
