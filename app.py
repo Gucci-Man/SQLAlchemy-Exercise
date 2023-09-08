@@ -76,7 +76,16 @@ def post_edit(user_id):
     last_name = request.form["last_name"]
     image_url = request.form["image_url"]
 
-    if len(image_url) == 0:
-        image_url = None
+    if len(image_url) != 0:
+        User.query.filter_by(id=user_id).update({"image_url": f"{image_url}"})
+        db.session.commit()
+
+    if len(first_name) != 0:
+        User.query.filter_by(id=user_id).update({"first_name": f"{first_name}"})
+        db.session.commit()
+
+    if len(last_name) != 0:
+        User.query.filter_by(id=user_id).update({"last_name": f"{last_name}"})
+        db.session.commit()
 
     return redirect("/users")
