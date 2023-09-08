@@ -38,6 +38,20 @@ def new_user():
     return render_template("form.html")
 
 
+@app.route("/users/new", methods=["POST"])
+def add_user():
+    """process the add form, adding a new user and going back to /users"""
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
+    image_url = request.form["image_url"]
+
+    new_user = User(first_name=first_name, last_name=last_name, image_url=image_url)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return redirect("/users")
+
+
 @app.route("/<int:user_id>")
 def show_user(user_id):
     """Show details about a user"""
