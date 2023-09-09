@@ -24,7 +24,7 @@ class User(db.Model):
     last_name = db.Column(db.String(50), nullable=False, unique=True)
 
     image_url = db.Column(
-        db.String(200),
+        db.String(500),
         nullable=True,
         default="https://img.freepik.com/premium-vector/people-icon-person-symbol-vector-illustration_276184-166.jpg?w=2000",
     )

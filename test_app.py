@@ -44,10 +44,10 @@ class UserViewsTestCase(TestCase):
     def test_redirect_users(self):
         """Test redirecting to the user listing home page"""
         with app.test_client() as client:
-            resp = client.get("/")
+            resp = client.get("/", follow_redirects=True)
             html = resp.get_data(as_text=True)
-            self.assertEqual(resp.status_code, 302)
-            self.assertIn("Redirecting", html)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("<h1>Users</h1>", html)
 
     def test_list_user(self):
         """Test listing the users"""
@@ -57,3 +57,22 @@ class UserViewsTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn("John", html)
+
+    def test_show_user(self):
+        """Test showing detail of the user"""
+        with app.test_client() as client:
+            resp = client.get(f"/users/{self.user_id}")
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("<h1>John Doe</h1>", html)
+
+    def test_add_user(self):
+        """Test adding a new user"""
+        with app.test_client() as client:
+            d = {"first_name": "Gucci", "last_name": "Chanel", "image_url": ""}
+            resp = client.post("/users/new", data=d, follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Gucci Chanel</a>", html)
