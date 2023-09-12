@@ -10,6 +10,6 @@
     <label>Image URL</label><br>
     <input type="text" name="image_url" placeholder="Provide an image URL for this user"><br>
     <button formaction="/users" formmethod="GET">Cancel</button>
-    <button formaction="/users/{{user.id}}/edit" formmethod="POST">Save</button>
+    <button formaction="/users/{{user.user_id}}/edit" formmethod="POST">Save</button>
 </form>
 {% endblock %}

@@ -4,7 +4,7 @@
     <img src={{user.image_url}} alt="profile pic" width="50" height="50">
     <h1>{{user.first_name}} {{user.last_name}}</h1><br>
         <form >
-            <button formaction="/users/{{user.id}}/edit" formmethod="GET">Edit</button></a>
-            <button formaction="/users/{{user.id}}/delete" formmethod="POST">Delete</button>
+            <button formaction="/users/{{user.user_id}}/edit" formmethod="GET">Edit</button></a>
+            <button formaction="/users/{{user.user_id}}/delete" formmethod="POST">Delete</button>
         </form>
 {% endblock %}

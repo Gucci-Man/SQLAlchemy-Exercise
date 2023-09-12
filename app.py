@@ -79,15 +79,15 @@ def post_edit(user_id):
     image_url = request.form["image_url"]
 
     if len(image_url) != 0:
-        User.query.filter_by(id=user_id).update({"image_url": f"{image_url}"})
+        User.query.filter_by(user_id=user_id).update({"image_url": f"{image_url}"})
         db.session.commit()
 
     if len(first_name) != 0:
-        User.query.filter_by(id=user_id).update({"first_name": f"{first_name}"})
+        User.query.filter_by(user_id=user_id).update({"first_name": f"{first_name}"})
         db.session.commit()
 
     if len(last_name) != 0:
-        User.query.filter_by(id=user_id).update({"last_name": f"{last_name}"})
+        User.query.filter_by(user_id=user_id).update({"last_name": f"{last_name}"})
         db.session.commit()
 
     return redirect("/users")
@@ -96,7 +96,7 @@ def post_edit(user_id):
 @app.route("/users/<int:user_id>/delete", methods=["POST"])
 def delete(user_id):
     """Delete the user"""
-    User.query.filter_by(id=user_id).delete()
+    User.query.filter_by(user_id=user_id).delete()
     db.session.commit()
 
     return redirect("/users")
