@@ -17,8 +17,9 @@ debug = DebugToolbarExtension(app)
 
 connect_db(app)
 
-db.drop_all()
-db.create_all()
+# drop existing tables and create new ones
+""" db.drop_all()
+db.create_all() """
 
 
 @app.route("/")
