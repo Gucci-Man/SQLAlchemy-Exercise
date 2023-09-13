@@ -153,3 +153,12 @@ def handle_edit_post(post_id):
 
 
 # TODO - POST /posts/[post-id]/delete : Delete the post.
+@app.route("/posts/<int:post_id>/delete", methods=["POST"])
+def delete_post(post_id):
+    """Delete a post"""
+    post = Post.query.get_or_404(post_id)
+    user = User.query.get_or_404(post.user_code)
+    Post.query.filter_by(post_id=post_id).delete()
+    db.session.commit()
+
+    return redirect(f"/users/{user.user_id}")
