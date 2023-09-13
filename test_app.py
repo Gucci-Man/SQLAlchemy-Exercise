@@ -1,6 +1,6 @@
 from unittest import TestCase
 from app import app
-from models import db, User
+from models import db, User, Post
 
 # Use test database and don't clutter tests with SQL
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///blogly_test"
@@ -12,6 +12,7 @@ app.config["TESTING"] = True
 # This is a bit of hack, but don't use Flask DebugToolbar
 app.config["DEBUG_TB_HOSTS"] = ["dont-show-debug-toolbar"]
 
+
 db.drop_all()
 db.create_all()
 
@@ -20,8 +21,9 @@ class UserViewsTestCase(TestCase):
     """Test for views for Users"""
 
     def setUp(self):
-        """Add a sample user"""
+        """Add a sample user and sample post"""
 
+        Post.query.delete()
         User.query.delete()
 
         user = User(
@@ -33,7 +35,7 @@ class UserViewsTestCase(TestCase):
         db.session.add(user)
         db.session.commit()
 
-        self.user_id = user.id
+        self.user_id = user.user_id
         self.user = user
 
     def tearDown(self):
@@ -70,9 +72,25 @@ class UserViewsTestCase(TestCase):
     def test_add_user(self):
         """Test adding a new user"""
         with app.test_client() as client:
-            d = {"first_name": "Gucci", "last_name": "Chanel", "image_url": ""}
+            d = {"first_name": "Bruce", "last_name": "Wayne", "image_url": ""}
             resp = client.post("/users/new", data=d, follow_redirects=True)
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("Gucci Chanel</a>", html)
+            self.assertIn("Bruce Wayne</a>", html)
+
+    def test_read_post(self):
+        """Test adding a new post"""
+        with app.test_client() as client:
+            p = {
+                "title": "Justice League",
+                "content": "Justice League Rules",
+                "user_code": "1",
+            }
+            resp = client.post(
+                f"/users/{self.user_id}/posts/new", data=p, follow_redirects=True
+            )
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Justice League</a>", html)

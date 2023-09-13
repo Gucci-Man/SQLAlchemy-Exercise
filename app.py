@@ -95,7 +95,6 @@ def post_edit(user_id):
     return redirect("/users")
 
 
-# TODO - How to delete the user when they have post connected to them
 @app.route("/users/<int:user_id>/delete", methods=["POST"])
 def delete(user_id):
     """Delete the user"""
