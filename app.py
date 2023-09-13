@@ -123,7 +123,7 @@ def handle_new_post(user_id):
     return redirect(f"/users/{user_id}")
 
 
-# TODO - Add edit and delete in template
+# TODO - Add delete in template
 @app.route("/posts/<int:post_id>")
 def post_detail(post_id):
     """Show a post. Show buttons to edit and delete the post"""
@@ -132,8 +132,24 @@ def post_detail(post_id):
     return render_template("post_detail.html", post=post, user=user)
 
 
-# TODO - GET /posts/[post-id]/edit : Show form to edit a post, and to cancel (back to user page).
+@app.route("/posts/<int:post_id>/edit")
+def edit_post(post_id):
+    """Show form to edit a post, and to cancel (back to user page)"""
+    post = Post.query.get_or_404(post_id)
+    user = User.query.get_or_404(post.user_code)
+    return render_template("edit_post.html", post=post, user=user)
 
-# TODO - POST /posts/[post-id]/edit : Handle editing of a post. Redirect back to the post view.
+
+@app.route("/posts/<int:post_id>/edit", methods=["POST"])
+def handle_edit_post(post_id):
+    """Handle editing of a post. Redirect back to the post view"""
+    title = request.form["title"]
+    content = request.form["content"]
+    Post.query.filter_by(post_id=post_id).update({"title": f"{title}"})
+    Post.query.filter_by(post_id=post_id).update({"content": f"{content}"})
+    db.session.commit()
+
+    return redirect(f"/posts/{post_id}")
+
 
 # TODO - POST /posts/[post-id]/delete : Delete the post.
