@@ -16,10 +16,10 @@ db.session.add_all([superman, batman, ironman])
 db.session.commit()
 
 # create post data
-p1 = Post(title="Daily News", content="Metropolis is in Danger", user_code=1)
+p1 = Post(title="Metropolis!", content="Metropolis is in Danger", user_code=1)
 p2 = Post(title="Daily News", content="Metropolis is at peace", user_code=1)
 p3 = Post(title="Gotham News", content="Gotham is taken over by joker", user_code=2)
-p4 = Post(title="Gotham News", content="Arkham Knight attacks again", user_code=2)
+p4 = Post(title="Arkham Series", content="Arkham Knight attacks again", user_code=2)
 p5 = Post(title="Avengers Daily", content="Avengers save the world again", user_code=3)
 
 db.session.add_all([p1, p2, p3, p4, p5])

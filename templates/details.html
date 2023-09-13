@@ -4,6 +4,7 @@
     <img src={{user.image_url}} alt="profile pic" width="50" height="50">
     <h1>{{user.first_name}} {{user.last_name}}</h1><br>
         <form >
+            <button formaction="/users" formmethod="GET">Home Page</button></a>
             <button formaction="/users/{{user.user_id}}/edit" formmethod="GET">Edit</button></a>
             <button formaction="/users/{{user.user_id}}/delete" formmethod="POST">Delete</button>
         </form>
@@ -13,4 +14,7 @@
         <li><a href="/posts/{{post.post_id}}">{{post.title}}</a></li>
     {% endfor %}
     </ul>
+    <form >
+        <button formaction="/users/{{user.user_id}}/posts/new" formmethod="GET">Add Post</button>
+    </form>
 {% endblock %}
