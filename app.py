@@ -62,7 +62,8 @@ def add_user():
 def show_user(user_id):
     """Show information about the given user."""
     user = User.query.get_or_404(user_id)
-    return render_template("details.html", user=user)
+    posts = Post.query.filter(Post.user_code == user_id)
+    return render_template("details.html", user=user, posts=posts)
 
 
 @app.route("/users/<int:user_id>/edit")
@@ -101,3 +102,23 @@ def delete(user_id):
     db.session.commit()
 
     return redirect("/users")
+
+
+# TODO - GET /users/[user-id]/posts/new : Show form to add a post for that user.
+
+# TODO - POST /users/[user-id]/posts/new : Handle add form; add post and redirect to the user detail page.
+
+
+@app.route("/posts/<int:post_id>")
+def post_detail(post_id):
+    """Show a post. Show buttons to edit and delete the post"""
+    post = Post.query.get_or_404(post_id)
+    user = User.query.get_or_404(post.user_code)
+    return render_template("post_detail.html", post=post, user=user)
+
+
+# TODO - GET /posts/[post-id]/edit : Show form to edit a post, and to cancel (back to user page).
+
+# TODO - POST /posts/[post-id]/edit : Handle editing of a post. Redirect back to the post view.
+
+# TODO - POST /posts/[post-id]/delete : Delete the post.

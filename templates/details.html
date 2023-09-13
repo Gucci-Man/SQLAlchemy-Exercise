@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{% endblock %}
+{% block title %}User Details{% endblock %}
 {% block content %}
     <img src={{user.image_url}} alt="profile pic" width="50" height="50">
     <h1>{{user.first_name}} {{user.last_name}}</h1><br>
@@ -7,4 +7,10 @@
             <button formaction="/users/{{user.user_id}}/edit" formmethod="GET">Edit</button></a>
             <button formaction="/users/{{user.user_id}}/delete" formmethod="POST">Delete</button>
         </form>
+    <h2>Posts</h2>
+    <ul>
+    {% for post in posts %}
+        <li><a href="/posts/{{post.post_id}}">{{post.title}}</a></li>
+    {% endfor %}
+    </ul>
 {% endblock %}
