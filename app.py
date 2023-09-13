@@ -95,9 +95,18 @@ def post_edit(user_id):
     return redirect("/users")
 
 
+# TODO - How to delete the user when they have post connected to them
 @app.route("/users/<int:user_id>/delete", methods=["POST"])
 def delete(user_id):
     """Delete the user"""
+    posts = Post.query.filter_by(user_code=user_id).all()
+
+    # if user have posts, delete those posts first
+    if len(posts) != 0:
+        for post in posts:
+            Post.query.filter_by(post_id=post.post_id).delete()
+            db.session.commit()
+
     User.query.filter_by(user_id=user_id).delete()
     db.session.commit()
 
@@ -123,7 +132,6 @@ def handle_new_post(user_id):
     return redirect(f"/users/{user_id}")
 
 
-# TODO - Add delete in template
 @app.route("/posts/<int:post_id>")
 def post_detail(post_id):
     """Show a post. Show buttons to edit and delete the post"""
@@ -152,7 +160,6 @@ def handle_edit_post(post_id):
     return redirect(f"/posts/{post_id}")
 
 
-# TODO - POST /posts/[post-id]/delete : Delete the post.
 @app.route("/posts/<int:post_id>/delete", methods=["POST"])
 def delete_post(post_id):
     """Delete a post"""

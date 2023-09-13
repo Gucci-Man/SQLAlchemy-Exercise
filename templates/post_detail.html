@@ -3,7 +3,8 @@
 {% block content %}
     <h2>{{post.title}}</h2>
     <p>{{post.content}}</p>
-    <cite>By {{user.first_name}} {{user.last_name}}</cite>
+    <cite>By {{user.first_name}} {{user.last_name}}</cite><br>
+    <cite>Created at {{post.created_at}}</cite>
     <form >
         <button formaction="/users/{{user.user_id}}" formmethod="GET">Cancel</button>
         <button formaction="/posts/{{post.post_id}}/edit" formmethod="GET">Edit</button></a>
