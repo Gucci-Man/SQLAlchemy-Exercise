@@ -9,8 +9,16 @@ db.create_all()
 
 # Create user data
 superman = User(first_name="Clark", last_name="Kent", image_url=None)
-batman = User(first_name="Bruce", last_name="Wayne", image_url=None)
-ironman = User(first_name="Tony", last_name="Stark", image_url=None)
+batman = User(
+    first_name="Bruce",
+    last_name="Wayne",
+    image_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMUJ2eluUMsAft7EjoRqUegTo-TxTe4I1gRg&usqp=CAU",
+)
+ironman = User(
+    first_name="Tony",
+    last_name="Stark",
+    image_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_cAlWyfiAdWCS1DAfrC7r3hf08sfRF6ygew&usqp=CAU",
+)
 
 db.session.add_all([superman, batman, ironman])
 db.session.commit()
