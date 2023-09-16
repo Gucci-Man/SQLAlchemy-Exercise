@@ -1,9 +1,8 @@
 """Blogly application."""
 
-from flask import Flask, request, render_template, redirect, flash, session
+from flask import Flask, request, render_template, redirect
 from flask_debugtoolbar import DebugToolbarExtension
 from models import *
-from sqlalchemy import text
 
 
 app = Flask(__name__)
@@ -96,13 +95,12 @@ def post_edit(user_id):
     return redirect("/users")
 
 
-# TODO - Handle deleting post tags first before deleting User
 @app.route("/users/<int:user_id>/delete", methods=["POST"])
 def delete(user_id):
     """Delete the user"""
     posts = Post.query.filter_by(user_code=user_id).all()
 
-    # if user have posts, delete those posts first
+    # if user have posts, delete those post tags then posts
     if len(posts) != 0:
         for post in posts:
             post_tags = PostTag.query.filter_by(post_id=post.post_id).all()

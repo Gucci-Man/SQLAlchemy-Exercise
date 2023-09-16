@@ -1,6 +1,6 @@
 """Seed file to make sample data for db."""
 
-from models import User, Post, db
+from models import *
 from app import app
 
 # Create all tables
@@ -23,7 +23,7 @@ ironman = User(
 db.session.add_all([superman, batman, ironman])
 db.session.commit()
 
-# create post data
+# Create post data
 p1 = Post(title="Metropolis!", content="Metropolis is in Danger", user_code=1)
 p2 = Post(title="Daily News", content="Metropolis is at peace", user_code=1)
 p3 = Post(title="Gotham News", content="Gotham is taken over by joker", user_code=2)
@@ -31,4 +31,25 @@ p4 = Post(title="Arkham Series", content="Arkham Knight attacks again", user_cod
 p5 = Post(title="Avengers Daily", content="Avengers save the world again", user_code=3)
 
 db.session.add_all([p1, p2, p3, p4, p5])
+db.session.commit()
+
+# Create tags
+t1 = Tag(name="Superman")
+t2 = Tag(name="Batman")
+t3 = Tag(name="Gotham")
+t4 = Tag(name="Iron Man")
+
+db.session.add_all([t1, t2, t3, t4])
+db.session.commit()
+
+# Create Post Tags
+pt1 = PostTag(post_id=1, tag_id=1)
+pt2 = PostTag(post_id=2, tag_id=1)
+pt3 = PostTag(post_id=3, tag_id=2)
+pt4 = PostTag(post_id=4, tag_id=2)
+pt5 = PostTag(post_id=3, tag_id=3)
+pt6 = PostTag(post_id=4, tag_id=3)
+pt7 = PostTag(post_id=5, tag_id=4)
+
+db.session.add_all([pt1, pt2, pt3, pt4, pt5, pt6, pt7])
 db.session.commit()
