@@ -168,3 +168,28 @@ def delete_post(post_id):
     db.session.commit()
 
     return redirect(f"/users/{user.user_id}")
+
+
+@app.route("/tags")
+def tags():
+    """List all tags, with links to the tag detail page"""
+    tags = db.session.query(Tag).all()
+
+    return render_template("tag_list.html", tags=tags)
+
+
+# TODO - GET /tags/[tag-id] : Show detail about a tag. Have links to edit form and to delete.
+@app.route("/tags/<int:tag_id>")
+def tag_details(tag_id):
+    """Show details about a tag. Have links to edit form and to delete"""
+
+
+# TODO - GET /tags/new : Shows a form to add a new tag.
+
+# TODO - POST /tags/new : Process add form, adds tag, and redirect to tag list.
+
+# TODO - GET /tags/[tag-id]/edit : Show edit form for a tag.
+
+# TODO - POST /tags/[tag-id]/edit : Process edit form, edit tag, and redirects to the tags list.
+
+# TODO - POST /tags/[tag-id]/delete : Delete a tag.
