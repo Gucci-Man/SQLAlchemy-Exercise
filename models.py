@@ -45,4 +45,26 @@ class Post(db.Model):
 
     user_code = db.Column(db.Integer, db.ForeignKey("users.user_id"))
 
-    assignments = db.relationship("User", backref="posts")
+    user_posts = db.relationship("User", backref="posts")
+
+    tags = db.relationship("Tag", secondary="post_tags", backref="posts")
+
+    post_tags = db.relationship("PostTag", backref="post_tags")
+
+
+# Tag Model
+class Tag(db.Model):
+    __tablename__ = "tags"
+
+    tag_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text, nullable=False, unique=True)
+
+
+# PostTag Model
+# Drop this table first when dropping and creating new tables
+class PostTag(db.Model):
+    __tablename__ = "post_tags"
+
+    post_id = db.Column(db.Integer, db.ForeignKey("posts.post_id"), primary_key=True)
+
+    tag_id = db.Column(db.Integer, db.ForeignKey("tags.tag_id"), primary_key=True)
