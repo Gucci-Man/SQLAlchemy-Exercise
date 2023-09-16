@@ -96,7 +96,7 @@ def post_edit(user_id):
     return redirect("/users")
 
 
-# TODO - Handle deleting post tags first before deleting post
+# TODO - Handle deleting post tags first before deleting User
 @app.route("/users/<int:user_id>/delete", methods=["POST"])
 def delete(user_id):
     """Delete the user"""
@@ -105,6 +105,13 @@ def delete(user_id):
     # if user have posts, delete those posts first
     if len(posts) != 0:
         for post in posts:
+            post_tags = PostTag.query.filter_by(post_id=post.post_id).all()
+            # Delete all connected Post Tags first
+            if len(post_tags) != 0:
+                for pt in post_tags:
+                    PostTag.query.filter_by(post_id=post.post_id).delete()
+                    db.session.commit()
+
             Post.query.filter_by(post_id=post.post_id).delete()
             db.session.commit()
 
@@ -166,10 +173,17 @@ def handle_edit_post(post_id):
     return redirect(f"/posts/{post_id}")
 
 
-# TODO - Need to handle deleting post tags first
 @app.route("/posts/<int:post_id>/delete", methods=["POST"])
 def delete_post(post_id):
     """Delete a post"""
+    post_tags = PostTag.query.filter_by(post_id=post_id).all()
+
+    # Delete all connected Post Tags first
+    if len(post_tags) != 0:
+        for pt in post_tags:
+            PostTag.query.filter_by(post_id=post_id).delete()
+            db.session.commit()
+
     post = Post.query.get_or_404(post_id)
     user = User.query.get_or_404(post.user_code)
     Post.query.filter_by(post_id=post_id).delete()
