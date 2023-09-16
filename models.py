@@ -2,6 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
+import datetime
 
 
 # initialize SQLAlchemy
@@ -41,7 +42,7 @@ class Post(db.Model):
 
     content = db.Column(db.Text, nullable=False)
 
-    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
 
     user_code = db.Column(db.Integer, db.ForeignKey("users.user_id"))
 

@@ -8,7 +8,7 @@
         <label>Content</label>
         <input type="text" name="content"><br>
         {% for tag in tags %}
-        <input type="checkbox" name="tags_list" value= "{{tag.tag_id}}">{{tag.name}}<br>
+            <input type="checkbox" name="tags_list" value= "{{tag.tag_id}}">{{tag.name}}<br>
         {% endfor %}
         <button formaction="/users/{{user.user_id}}" formmethod="GET">Cancel</button>
         <button formaction="/users/{{user.user_id}}/posts/new" formmethod="POST">Add</button>

@@ -119,7 +119,6 @@ def delete(user_id):
     return redirect("/users")
 
 
-# TODO - show tags to add for post
 @app.route("/users/<int:user_id>/posts/new")
 def new_post(user_id):
     """Show form to add a post for that user"""
@@ -156,27 +155,47 @@ def post_detail(post_id):
     """Show a post. Show buttons to edit and delete the post"""
     post = Post.query.get_or_404(post_id)
     user = User.query.get_or_404(post.user_code)
-    return render_template("post_detail.html", post=post, user=user)
+    tags = post.tags
+
+    return render_template("post_detail.html", post=post, user=user, tags=tags)
 
 
-# TODO - add radio buttons to choose tag to edit
 @app.route("/posts/<int:post_id>/edit")
 def edit_post(post_id):
     """Show form to edit a post, and to cancel (back to user page)"""
     post = Post.query.get_or_404(post_id)
     user = User.query.get_or_404(post.user_code)
-    return render_template("edit_post.html", post=post, user=user)
+    tags = db.session.query(Tag).all()  # Get list of tags to add for post editing
+
+    # Delete the Post tags to make room for new ones
+    post_tags = PostTag.query.filter_by(post_id=post_id).all()
+
+    # Deleting all connected Post Tags
+    if len(post_tags) != 0:
+        for pt in post_tags:
+            PostTag.query.filter_by(post_id=post_id).delete()
+            db.session.commit()
+
+    return render_template("edit_post.html", post=post, user=user, tags=tags)
 
 
-# TODO - add radio buttons to choose tag to edit
 @app.route("/posts/<int:post_id>/edit", methods=["POST"])
 def handle_edit_post(post_id):
     """Handle editing of a post. Redirect back to the post view"""
+    # First handle editing posts
     title = request.form["title"]
     content = request.form["content"]
     Post.query.filter_by(post_id=post_id).update({"title": f"{title}"})
     Post.query.filter_by(post_id=post_id).update({"content": f"{content}"})
     db.session.commit()
+
+    # Next handle updating the Post Tags
+    tags = request.form.getlist("tags_list")
+    if len(tags) != 0:
+        for tag in tags:
+            pt = PostTag(post_id=post_id, tag_id=tag)
+            db.session.add(pt)
+            db.session.commit()
 
     return redirect(f"/posts/{post_id}")
 
