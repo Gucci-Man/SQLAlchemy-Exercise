@@ -76,7 +76,7 @@ def edit_user(user_id):
 
 @app.route("/users/<int:user_id>/edit", methods=["POST"])
 def post_edit(user_id):
-    """Process the edit form"""
+    """Process the user edit form"""
     first_name = request.form["first_name"]
     last_name = request.form["last_name"]
     image_url = request.form["image_url"]
@@ -96,6 +96,7 @@ def post_edit(user_id):
     return redirect("/users")
 
 
+# TODO - Handle deleting post tags first before deleting post
 @app.route("/users/<int:user_id>/delete", methods=["POST"])
 def delete(user_id):
     """Delete the user"""
@@ -113,6 +114,7 @@ def delete(user_id):
     return redirect("/users")
 
 
+# TODO - show tags to add for post
 @app.route("/users/<int:user_id>/posts/new")
 def new_post(user_id):
     """Show form to add a post for that user"""
@@ -120,6 +122,7 @@ def new_post(user_id):
     return render_template("new_post.html", user=user)
 
 
+# TODO - show tags to add for post
 @app.route("/users/<int:user_id>/posts/new", methods=["POST"])
 def handle_new_post(user_id):
     """Handle add post form, add post and redirect to the user detail page"""
@@ -132,6 +135,7 @@ def handle_new_post(user_id):
     return redirect(f"/users/{user_id}")
 
 
+# TODO - show tags for that post
 @app.route("/posts/<int:post_id>")
 def post_detail(post_id):
     """Show a post. Show buttons to edit and delete the post"""
@@ -140,6 +144,7 @@ def post_detail(post_id):
     return render_template("post_detail.html", post=post, user=user)
 
 
+# TODO - add radio buttons to choose tag to edit
 @app.route("/posts/<int:post_id>/edit")
 def edit_post(post_id):
     """Show form to edit a post, and to cancel (back to user page)"""
@@ -148,6 +153,7 @@ def edit_post(post_id):
     return render_template("edit_post.html", post=post, user=user)
 
 
+# TODO - add radio buttons to choose tag to edit
 @app.route("/posts/<int:post_id>/edit", methods=["POST"])
 def handle_edit_post(post_id):
     """Handle editing of a post. Redirect back to the post view"""
@@ -160,6 +166,7 @@ def handle_edit_post(post_id):
     return redirect(f"/posts/{post_id}")
 
 
+# TODO - Need to handle deleting post tags first
 @app.route("/posts/<int:post_id>/delete", methods=["POST"])
 def delete_post(post_id):
     """Delete a post"""
@@ -179,7 +186,6 @@ def tags():
     return render_template("tag_list.html", tags=tags)
 
 
-# TODO - Have links to edit form and to delete.
 @app.route("/tags/<int:tag_id>")
 def tag_details(tag_id):
     """Show details about a tag. Have links to edit form and to delete"""
@@ -224,4 +230,18 @@ def edit_tag_post(tag_id):
     return redirect(f"/tags/{tag_id}")
 
 
-# TODO - POST /tags/[tag-id]/delete : Delete a tag.
+@app.route("/tags/<int:tag_id>/delete", methods=["POST"])
+def delete_tag(tag_id):
+    """Delete a tag."""
+    post_tags = PostTag.query.filter_by(tag_id=tag_id).all()
+
+    # Delete all connected Post Tags first
+    if len(post_tags) != 0:
+        for pt in post_tags:
+            PostTag.query.filter_by(tag_id=tag_id).delete()
+            db.session.commit()
+
+    Tag.query.filter_by(tag_id=tag_id).delete()
+    db.session.commit()
+
+    return redirect("/tags")
