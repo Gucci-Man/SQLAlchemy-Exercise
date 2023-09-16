@@ -32,7 +32,8 @@ def home():
 def list_users():
     """Shows list of all users in db"""
     users = User.query.all()
-    return render_template("list.html", users=users)
+    tags = db.session.query(Tag).all()
+    return render_template("list.html", users=users, tags=tags)
 
 
 @app.route("/users/new")
@@ -178,15 +179,33 @@ def tags():
     return render_template("tag_list.html", tags=tags)
 
 
-# TODO - GET /tags/[tag-id] : Show detail about a tag. Have links to edit form and to delete.
+# TODO - Have links to edit form and to delete.
 @app.route("/tags/<int:tag_id>")
 def tag_details(tag_id):
     """Show details about a tag. Have links to edit form and to delete"""
+    tag = Tag.query.get_or_404(tag_id)
+    posts = tag.posts
+    return render_template("tag_detail.html", tag=tag, posts=posts)
 
 
 # TODO - GET /tags/new : Shows a form to add a new tag.
+@app.route("/tags/new")
+def new_tag():
+    """Shows a form to add a new tag"""
+    return render_template("add_tag.html")
+
 
 # TODO - POST /tags/new : Process add form, adds tag, and redirect to tag list.
+@app.route("/tags/new", methods=["POST"])
+def new_tag_post():
+    """Process add form, adds tag, and redirect to tag list."""
+    tag_name = request.form["tag_name"]
+    new_tag = Tag(name=tag_name)
+    db.session.add(new_tag)
+    db.session.commit()
+
+    return redirect("/tags")
+
 
 # TODO - GET /tags/[tag-id]/edit : Show edit form for a tag.
 
