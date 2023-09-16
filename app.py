@@ -124,18 +124,28 @@ def delete(user_id):
 def new_post(user_id):
     """Show form to add a post for that user"""
     user = User.query.get_or_404(user_id)
-    return render_template("new_post.html", user=user)
+    tags = db.session.query(Tag).all()  # Get list of tags to add for post
+
+    return render_template("new_post.html", user=user, tags=tags)
 
 
-# TODO - show tags to add for post
 @app.route("/users/<int:user_id>/posts/new", methods=["POST"])
 def handle_new_post(user_id):
     """Handle add post form, add post and redirect to the user detail page"""
+    # First handle adding post
     title = request.form["title"]
     content = request.form["content"]
     new_post = Post(title=title, content=content, user_code=user_id)
     db.session.add(new_post)
     db.session.commit()
+
+    # Next handle creating the Post Tags
+    tags = request.form.getlist("tags_list")  # returns a list of selected tag_ids
+    if len(tags) != 0:
+        for tag in tags:
+            pt = PostTag(post_id=new_post.post_id, tag_id=tag)
+            db.session.add(pt)
+            db.session.commit()
 
     return redirect(f"/users/{user_id}")
 
