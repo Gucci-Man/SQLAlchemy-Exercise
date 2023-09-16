@@ -188,14 +188,12 @@ def tag_details(tag_id):
     return render_template("tag_detail.html", tag=tag, posts=posts)
 
 
-# TODO - GET /tags/new : Shows a form to add a new tag.
 @app.route("/tags/new")
 def new_tag():
     """Shows a form to add a new tag"""
     return render_template("add_tag.html")
 
 
-# TODO - POST /tags/new : Process add form, adds tag, and redirect to tag list.
 @app.route("/tags/new", methods=["POST"])
 def new_tag_post():
     """Process add form, adds tag, and redirect to tag list."""
@@ -207,8 +205,23 @@ def new_tag_post():
     return redirect("/tags")
 
 
-# TODO - GET /tags/[tag-id]/edit : Show edit form for a tag.
+@app.route("/tags/<int:tag_id>/edit")
+def edit_tag(tag_id):
+    """Show edit form for a tag."""
+    tag = Tag.query.get_or_404(tag_id)
 
-# TODO - POST /tags/[tag-id]/edit : Process edit form, edit tag, and redirects to the tags list.
+    return render_template("edit_tag.html", tag=tag)
+
+
+@app.route("/tags/<int:tag_id>/edit", methods=["POST"])
+def edit_tag_post(tag_id):
+    """Process edit form, edit tag, and redirects to the tags list."""
+    tag_name = request.form["tag_name"]
+
+    Tag.query.filter_by(tag_id=tag_id).update({"name": f"{tag_name}"})
+    db.session.commit()
+
+    return redirect(f"/tags/{tag_id}")
+
 
 # TODO - POST /tags/[tag-id]/delete : Delete a tag.
